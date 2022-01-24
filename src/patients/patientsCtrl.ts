@@ -3,7 +3,7 @@ import {
     ChildPatient,
     YoungPatient,
     ElderlyPatient,
-    TPatient
+    TPatient,
 } from './patient';
 import utils from '../utils/utils';
 
@@ -14,7 +14,7 @@ class PatientController {
         return userData
     }
 
-    buildPatientData(userData: any): TPatient {
+    buildPatientData(userData: any) {
         const { name: { first, last }, gender } = userData;
         const age = utils.generateRandomNumber(100)
         return {
@@ -25,29 +25,23 @@ class PatientController {
         };
     }
 
-    async generate() {
-        try {
-            const randomData = await this.fetchRandomUser()
-            const newPatientData = this.buildPatientData(randomData)
-            return this.classifyPatient(newPatientData);
-        } catch (error) {
-            return { error };
-        }
+    async generate(): Promise<any> {
+        const randomData = await this.fetchRandomUser()
+        const newPatientData = this.buildPatientData(randomData)
+        return this.buildPatient(newPatientData);
     }
 
-    classifyPatient(patientData: TPatient) {
+    buildPatient(patientData: TPatient) {
         const { age } = patientData;
-        let generatedPatient = undefined;
         if (age <= 15) {
-            generatedPatient = new ChildPatient(patientData);
+            return new ChildPatient(patientData);
         }
         if (age >= 16 && age <= 40) {
-            generatedPatient = new YoungPatient(patientData);
+            return new YoungPatient(patientData);
         }
         if (age >= 41) {
-            generatedPatient = new ElderlyPatient(patientData);
+            return new ElderlyPatient(patientData);
         }
-        return generatedPatient;
     }
 }
 

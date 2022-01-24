@@ -8,7 +8,12 @@ export type TPatient = {
     type?: string;
 }
 
-class Patient {
+export interface IPatient {
+    patientData?: TPatient;
+    calculateExtraProp():void;
+}
+
+class Patient implements IPatient {
     patientData: TPatient;
     constructor(patientData: TPatient) {
         this.patientData = patientData;
@@ -22,7 +27,8 @@ export class ChildPatient extends Patient {
         super({ ...patientData, type: 'child' })
     }
     calculateExtraProp() {
-        this.weightRatio = utils.generateRandomNumber(4)
+        console.log('calculat peso ratio')
+        this.weightRatio = utils.generateRandomNumber(4, 1)
     }
 }
 
