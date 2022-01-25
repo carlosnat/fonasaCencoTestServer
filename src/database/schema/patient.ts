@@ -19,6 +19,9 @@ export const definePatientlModel = () => {
         },
         historyNumber: {
             type: DataTypes.STRING
+        },
+        image: {
+            type: DataTypes.STRING
         }
     });
 }

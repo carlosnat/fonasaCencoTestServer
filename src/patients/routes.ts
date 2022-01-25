@@ -80,7 +80,7 @@ router.get('/top', async (req, res) => {
 })
 
 router.get('/older', async (req, res) => {
-    res.send({ top: myHospital.findOlder() })
+    res.send({ top: await myHospital.findOlder() })
 })
 
 router.get('/top-smoker', async (req, res) => {

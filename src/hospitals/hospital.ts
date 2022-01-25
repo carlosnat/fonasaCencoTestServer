@@ -135,17 +135,26 @@ class Hospital implements IHopsital {
         return top
     }
 
-    findOlder(): any {
-        let older: any = { age: 0 };
-        for (let patient of this.consultaGeneral) {
-            if (patient.age > older.age)
-                older = patient
-        }
-        for (let patient of this.urgencia) {
-            if (patient.age > older.age)
-                older = patient
-        }
-        return older
+    async findOlder(): Promise<any> {
+        const olderWaiting:any = await sequelize.models.HospitalPatient.findOne({
+            attributes: ['priority', 'risk', 'status'],
+            where: {
+                status: 'waiting'
+            }, 
+            include: [
+                {
+                    model: sequelize.models.Patient,
+                    attributes: ['name', 'age'],
+                    where: {
+                        group: 'elder'
+                    },
+                }
+            ],
+            order: [
+                [sequelize.models.Patient, 'age', 'DESC']
+            ]
+        })
+        return olderWaiting
     }
 
     smokerUgency(): string[] {
