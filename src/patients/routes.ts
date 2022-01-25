@@ -76,7 +76,7 @@ router.get('/free', async (req, res) => {
 })
 
 router.get('/top', async (req, res) => {
-    res.send({ top: myHospital.topConsults() })
+    res.send({ top: await myHospital.topConsults() })
 })
 
 router.get('/older', async (req, res) => {

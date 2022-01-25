@@ -20,7 +20,7 @@ interface IHopsital {
     addPatientToQueue(patient: hospitalPatient, patientDbInstance: any): void;
     attendPatients(): void;
     freeConsults(): void;
-    topConsults(): consult | null;
+    topConsults(): any;
     findOlder(): any;
     smokerUgency(): string[];
 }
@@ -126,13 +126,13 @@ class Hospital implements IHopsital {
         }
     }
 
-    topConsults(): consult | null {
-        let top: consult | null = null;
-        for (let consult of this.consults) {
-            if (!top || top.totalPatients < consult.totalPatients)
-                top = consult
-        }
-        return top
+    async topConsults(): Promise<any> {
+        const topAttendedConsultant:any = await sequelize.models.Consultation.findOne({
+            order: [
+                ['totalAttended', 'DESC']
+            ]
+        })
+        return topAttendedConsultant
     }
 
     async findOlder(): Promise<any> {

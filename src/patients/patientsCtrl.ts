@@ -17,14 +17,15 @@ class PatientController {
     }
 
     buildPatientData(userData: any) {
-        const { name: { first, last }, gender } = userData;
+        const { name: { first, last }, gender, picture: { medium } } = userData;
         const maxAgeToGenerate: number = 100;
         const age = utils.generateRandomNumber(maxAgeToGenerate)
         return {
             name: `${first} ${last}`,
             age,
             historyNumber: new Date().getTime().toString(),
-            gender
+            gender,
+            image: medium
         };
     }
 

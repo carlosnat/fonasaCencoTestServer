@@ -7,6 +7,7 @@ export type TPatient = {
     historyNumber: string;
     gender: string;
     type?: string;
+    image: string;
 }
 
 export interface IPatient {
