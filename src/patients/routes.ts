@@ -1,5 +1,6 @@
 import { Router } from "express";
 import PatientsController from './patientsCtrl'
+import myHospital from "../hospitals/hospital";
 
 const router = Router()
 
@@ -45,7 +46,8 @@ router.use('/generate', async (req, res) => {
         generated.calculateExtraProp()
         const priority = assignPriority(generated)
         const risk = calculateRisk(generated, priority)
-        res.send({ generated, priority, risk })
+        myHospital.addPatientToQueue({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
+        res.send({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
     } catch (error) {
         res.status(500).send({ error: JSON.stringify(error) })
     }

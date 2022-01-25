@@ -11,6 +11,7 @@ export type TPatient = {
 export interface IPatient {
     patientData?: TPatient;
     calculateExtraProp():void;
+    getExtraProp(): any;
 }
 
 class Patient implements IPatient {
@@ -19,6 +20,7 @@ class Patient implements IPatient {
         this.patientData = patientData;
     }
     calculateExtraProp() { }
+    getExtraProp() {}
 }
 
 export class ChildPatient extends Patient {
@@ -27,8 +29,13 @@ export class ChildPatient extends Patient {
         super({ ...patientData, type: 'child' })
     }
     calculateExtraProp() {
-        console.log('calculat peso ratio')
         this.weightRatio = utils.generateRandomNumber(4, 1)
+    }
+
+    getExtraProp() {
+        return {
+            weightRatio: this.weightRatio,
+        }
     }
 }
 
@@ -42,6 +49,13 @@ export class YoungPatient extends Patient {
         this.smoker = utils.generateRandomNumber(2) === 1 ? true : false
         this.timeSmoking = Math.floor(Math.random() * this.patientData.age)
     }
+
+    getExtraProp() {
+        return {
+            smoker: this.smoker,
+            timeSmoking: this.timeSmoking
+        }
+    }
 }
 
 export class ElderlyPatient extends Patient {
@@ -51,5 +65,11 @@ export class ElderlyPatient extends Patient {
     }
     calculateExtraProp() {
         this.hasDiet = utils.generateRandomNumber(2) === 1 ? true : false
+    }
+
+    getExtraProp() {
+        return {
+            hasDiet: this.hasDiet,
+        }
     }
 }
