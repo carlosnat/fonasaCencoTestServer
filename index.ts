@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import helmet from 'helmet';
 import patientsRouter from './src/patients/routes'
 import hospitalRouter from './src/hospitals/routes'
+import { connecToDataBase } from './src/database/connection';
+
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -19,4 +21,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('<h1>Hello from the TypeScript world!</h1>');
 });
 
-app.listen(PORT, () => console.log(`Running on ${PORT} ⚡`));
+app.listen(PORT, () => {
+  console.log(`Running on ${PORT} ⚡`)
+  connecToDataBase()
+});
