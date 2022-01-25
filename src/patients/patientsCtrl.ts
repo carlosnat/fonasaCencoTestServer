@@ -6,8 +6,10 @@ import {
     TPatient,
 } from './patient';
 import utils from '../utils/utils';
+import { sequelize } from '../database/connection';
 
 class PatientController {
+    patientDb:any;
     async fetchRandomUser() {
         const { data } = await Axios.get('https://randomuser.me/api/?results=1&inc=gender,name,dob,id,picture');
         const [userData] = data.results;
@@ -16,11 +18,12 @@ class PatientController {
 
     buildPatientData(userData: any) {
         const { name: { first, last }, gender } = userData;
-        const age = utils.generateRandomNumber(100)
+        const maxAgeToGenerate: number = 100;
+        const age = utils.generateRandomNumber(maxAgeToGenerate)
         return {
             name: `${first} ${last}`,
             age,
-            historyId: new Date().getTime().toString(),
+            historyNumber: new Date().getTime().toString(),
             gender
         };
     }
@@ -28,19 +31,27 @@ class PatientController {
     async generate(): Promise<any> {
         const randomData = await this.fetchRandomUser()
         const newPatientData = this.buildPatientData(randomData)
+        this.patientDb = sequelize.models.Patient.build(newPatientData)
+        await this.patientDb.save()
         return this.buildPatient(newPatientData);
     }
 
-    buildPatient(patientData: TPatient) {
+    async buildPatient(patientData: TPatient) {
         const { age } = patientData;
         if (age <= 15) {
-            return new ChildPatient(patientData);
+            this.patientDb.group = 'child'
+            await this.patientDb.save()
+            return new ChildPatient(patientData, this.patientDb);
         }
         if (age >= 16 && age <= 40) {
-            return new YoungPatient(patientData);
+            this.patientDb.group = 'young'
+            await this.patientDb.save()
+            return new YoungPatient(patientData, this.patientDb);
         }
         if (age >= 41) {
-            return new ElderlyPatient(patientData);
+            this.patientDb.group = 'elder'
+            await this.patientDb.save()
+            return new ElderlyPatient(patientData, this.patientDb);
         }
     }
 }

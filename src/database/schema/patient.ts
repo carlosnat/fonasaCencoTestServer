@@ -18,7 +18,7 @@ export const definePatientlModel = () => {
             type: DataTypes.STRING
         },
         historyNumber: {
-            type: DataTypes.INTEGER
+            type: DataTypes.STRING
         }
     });
 }

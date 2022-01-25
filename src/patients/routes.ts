@@ -43,6 +43,7 @@ router.get('/generate', async (req, res) => {
     try {
         const patient = new PatientsController()
         const generated = await patient.generate()
+        //
         generated.calculateExtraProp()
         const priority = assignPriority(generated)
         const risk = calculateRisk(generated, priority)
