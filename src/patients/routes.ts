@@ -46,7 +46,6 @@ router.get('/generate', async (req, res) => {
         const generated = await patient.generate()
         //
         generated.calculateExtraProp()
-        console.log('---generated', generated.patientDbInstace.id)
         const hospitalPatientDbInstance:any = sequelize.models.HospitalPatient.build({
             PatientId: generated.patientDbInstace.id,
             status: 'pending',
@@ -54,7 +53,6 @@ router.get('/generate', async (req, res) => {
         })
 
         await hospitalPatientDbInstance.save()
-        console.log('new record?', hospitalPatientDbInstance.PatientId)
         const priority = assignPriority(generated)
         hospitalPatientDbInstance.priority = priority
         const risk = calculateRisk(generated, priority)

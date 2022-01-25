@@ -1,3 +1,5 @@
+import { sequelize } from "../database/connection"
+
 type hospitalPatient = {
     name: string;
     age: number;
@@ -81,39 +83,46 @@ class Hospital implements IHopsital {
         await patientDbInstance.save()
     }
 
-    attendPatients() {
-        for (let consult of this.consults) {
-            if (consult.state === 'open') {
-                switch (consult.type) {
-                    case 'general':
-                        if (this.consultaGeneral.length) {
-                            this.consultaGeneral.pop()
-                            consult.state = 'close'
-                            consult.totalPatients++
-                        }
-                        break;
-                    case 'pediatric':
-                        if (this.pediatria.length) {
-                            this.pediatria.pop()
-                            consult.state = 'close'
-                            consult.totalPatients++
-                        }
-                        break;
-                    case 'urgency':
-                        if (this.urgencia.length) {
-                            this.urgencia.pop()
-                            consult.state = 'close'
-                            consult.totalPatients++
-                        }
-                        break;
-                }
+    async attendPatients() {
+        const consultationsAvailable:any[] = await sequelize.models.Consultation.findAll({
+            where: {
+                state: 'open'
+            }
+        })
+
+        for(let consultant of consultationsAvailable) {
+            const patientToAttend:any = await sequelize.models.HospitalPatient.findOne({
+                where: {
+                   HospitalId: consultant.HospitalId,
+                   consultType: consultant.type,
+                   status: 'waiting'
+                },
+                order: [
+                    ['priority', 'DESC'],
+                    ['risk', 'DESC']
+                ],
+                include: sequelize.models.Patient
+            })
+            if(patientToAttend) {
+                patientToAttend.status = 'attended'
+                await patientToAttend.save()
+                consultant.state = 'close'
+                consultant.totalAttended++
+                await consultant.save()
             }
         }
     }
 
-    freeConsults() {
-        for (let consult of this.consults) {
-            consult.state = 'open'
+    async freeConsults() {
+        const consultationsAvailable:any[] = await sequelize.models.Consultation.findAll({
+            where: {
+                state: 'close'
+            }
+        })
+
+        for(let consultant of consultationsAvailable) {
+            consultant.state = 'open'
+            await consultant.save()
         }
     }
 

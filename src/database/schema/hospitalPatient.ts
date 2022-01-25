@@ -22,6 +22,7 @@ export const defineHospitalPatientModel = () => {
         }
     });
     HospitalPatient.belongsTo(sequelize.models.Hospital)
+    HospitalPatient.belongsTo(sequelize.models.Patient)
     sequelize.models.Hospital.belongsToMany(sequelize.models.Patient, { through: HospitalPatient, uniqueKey: 'id' })
     sequelize.models.Patient.belongsToMany(sequelize.models.Hospital, { through: HospitalPatient, uniqueKey: 'id' })
 }

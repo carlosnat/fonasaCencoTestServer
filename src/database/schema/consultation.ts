@@ -17,6 +17,10 @@ export const defineConsultationModel = () => {
         },
         type: {
             type: DataTypes.ENUM('pediatry', 'general', 'urgency')
+        },
+        totalAttended: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         }
     });
     Consultation.belongsTo(sequelize.models.Hospital)
