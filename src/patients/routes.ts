@@ -1,6 +1,7 @@
 import { Router } from "express";
 import PatientsController from './patientsCtrl'
 import myHospital from "../hospitals/hospital";
+import { sequelize } from "../database/connection";
 
 const router = Router()
 
@@ -45,9 +46,21 @@ router.get('/generate', async (req, res) => {
         const generated = await patient.generate()
         //
         generated.calculateExtraProp()
+        console.log('---generated', generated.patientDbInstace.id)
+        const hospitalPatientDbInstance:any = sequelize.models.HospitalPatient.build({
+            PatientId: generated.patientDbInstace.id,
+            status: 'pending',
+            HospitalId: req.query.hospitalId,
+        })
+
+        await hospitalPatientDbInstance.save()
+        console.log('new record?', hospitalPatientDbInstance.PatientId)
         const priority = assignPriority(generated)
+        hospitalPatientDbInstance.priority = priority
         const risk = calculateRisk(generated, priority)
-        myHospital.addPatientToQueue({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
+        hospitalPatientDbInstance.risk = risk
+        await hospitalPatientDbInstance.save()
+        myHospital.addPatientToQueue({ ...generated.patientData, ...generated.getExtraProp(), priority, risk }, hospitalPatientDbInstance)
         res.send({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
     } catch (error) {
         res.status(500).send({ error: JSON.stringify(error) })

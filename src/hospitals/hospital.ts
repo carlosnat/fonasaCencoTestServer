@@ -15,7 +15,7 @@ interface IHopsital {
     urgencia: hospitalPatient[];
     consultaGeneral: hospitalPatient[];
     consults: consult[];
-    addPatientToQueue(patient: hospitalPatient): void;
+    addPatientToQueue(patient: hospitalPatient, patientDbInstance: any): void;
     attendPatients(): void;
     freeConsults(): void;
     topConsults(): consult | null;
@@ -64,13 +64,21 @@ class Hospital implements IHopsital {
         })
     }
 
-    addPatientToQueue(patient: hospitalPatient) {
-        if (patient.type === 'child' && patient.priority <= 4)
+    async addPatientToQueue(patient: hospitalPatient, patientDbInstance:any) {
+        if (patient.type === 'child' && patient.priority <= 4) {
             this.pediatria.push(patient)
-        else if (patient.priority <= 4)
+            patientDbInstance.consultType = 'pediatry'
+        }
+        else if (patient.priority <= 4) {
             this.consultaGeneral.push(patient)
-        else
+            patientDbInstance.consultType = 'general'
+        }
+        else {
             this.urgencia.push(patient)
+            patientDbInstance.consultType = 'urgency'
+        }
+        patientDbInstance.status = 'waiting'
+        await patientDbInstance.save()
     }
 
     attendPatients() {

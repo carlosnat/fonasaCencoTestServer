@@ -8,11 +8,12 @@ export const defineConsultationModel = () => {
             primaryKey: true,
             autoIncrement: true
         },
-        specialisName: {
+        specialistName: {
             type: DataTypes.STRING
         },
         state: {
-            type: DataTypes.ENUM('open', 'close')
+            type: DataTypes.ENUM('open', 'close'),
+            defaultValue: 'open'
         },
         type: {
             type: DataTypes.ENUM('pediatry', 'general', 'urgency')

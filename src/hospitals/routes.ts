@@ -12,7 +12,18 @@ router.get('/report', async (req, res) => {
     })
 })
 
-router.post('/', async(req, res) => {
+router.post('/consultation', async (req, res) => {
+    try {
+        const { specialistName, type, hospitalId } = req.body
+        const newConsultation = sequelize.models.Consultation.build({ specialistName, type, HospitalId: hospitalId })
+        await newConsultation.save()
+        res.send(newConsultation)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+router.post('/', async (req, res) => {
     const { name, address } = req.body
     const newHospital = sequelize.models.Hospital.build({
         name,

@@ -3,14 +3,16 @@ import { sequelize, DataTypes } from "../../database/connection";
 let HospitalPatient: any
 export const defineHospitalPatientModel = () => {
     HospitalPatient = sequelize.define('HospitalPatient', {
-        pritority: {
+        id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        priority: {
             type: DataTypes.INTEGER
         },
         risk: {
             type: DataTypes.FLOAT
-        },
-        state: {
-            type: DataTypes.ENUM('open', 'close')
         },
         consultType: {
             type: DataTypes.ENUM('pediatry', 'general', 'urgency')
@@ -20,8 +22,8 @@ export const defineHospitalPatientModel = () => {
         }
     });
     HospitalPatient.belongsTo(sequelize.models.Hospital)
-    sequelize.models.Hospital.belongsToMany(sequelize.models.Patient, { through: HospitalPatient})
-    sequelize.models.Patient.belongsToMany(sequelize.models.Hospital, { through: HospitalPatient})
+    sequelize.models.Hospital.belongsToMany(sequelize.models.Patient, { through: HospitalPatient, uniqueKey: 'id' })
+    sequelize.models.Patient.belongsToMany(sequelize.models.Hospital, { through: HospitalPatient, uniqueKey: 'id' })
 }
 
 export default HospitalPatient;
