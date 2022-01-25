@@ -10,7 +10,7 @@ const patientsType = {
     ELDER: 'elder'
 }
 
-const assignPriority = ( data : any) => {
+const assignPriority = (data: any) => {
     const { type, age } = data.patientData
     switch (type) {
         case patientsType.CHILD:
@@ -39,7 +39,7 @@ const calculateRisk = ({ patientData }: any, priority: number) => {
     return ((age * priority) / 100).toFixed(1)
 }
 
-router.use('/generate', async (req, res) => {
+router.get('/generate', async (req, res) => {
     try {
         const patient = new PatientsController()
         const generated = await patient.generate()
@@ -51,6 +51,21 @@ router.use('/generate', async (req, res) => {
     } catch (error) {
         res.status(500).send({ error: JSON.stringify(error) })
     }
+})
+
+router.get('/attend', async (req, res) => {
+    myHospital.attendPatients()
+    res.send({ msg: 'attend', consults: myHospital.consults })
+})
+
+router.get('/free', async (req, res) => {
+    myHospital.freeConsults()
+    res.send({ msg: 'all free' })
+})
+
+router.get('/top', async (req, res) => {
+
+    res.send({ top: myHospital.topConsults() })
 })
 
 export default router
