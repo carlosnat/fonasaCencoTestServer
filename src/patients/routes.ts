@@ -64,8 +64,15 @@ router.get('/free', async (req, res) => {
 })
 
 router.get('/top', async (req, res) => {
-
     res.send({ top: myHospital.topConsults() })
+})
+
+router.get('/older', async (req, res) => {
+    res.send({ top: myHospital.findOlder() })
+})
+
+router.get('/top-smoker', async (req, res) => {
+    res.send({ top: myHospital.smokerUgency() })
 })
 
 export default router

@@ -7,6 +7,7 @@ type hospitalPatient = {
     hasDiet: boolean;
     priority: number;
     risk: number;
+    smoker: boolean;
 }
 
 interface IHopsital {
@@ -17,7 +18,9 @@ interface IHopsital {
     addPatientToQueue(patient: hospitalPatient): void;
     attendPatients(): void;
     freeConsults(): void;
-    topConsults():consult | null;
+    topConsults(): consult | null;
+    findOlder(): any;
+    smokerUgency(): string[];
 }
 
 type consult = {
@@ -106,13 +109,35 @@ class Hospital implements IHopsital {
         }
     }
 
-    topConsults():consult | null {
+    topConsults(): consult | null {
         let top: consult | null = null;
         for (let consult of this.consults) {
-            if(!top || top.totalPatients < consult.totalPatients)
+            if (!top || top.totalPatients < consult.totalPatients)
                 top = consult
         }
         return top
+    }
+
+    findOlder(): any {
+        let older: any = { age: 0 };
+        for (let patient of this.consultaGeneral) {
+            if (patient.age > older.age)
+                older = patient
+        }
+        for (let patient of this.urgencia) {
+            if (patient.age > older.age)
+                older = patient
+        }
+        return older
+    }
+
+    smokerUgency(): string[] {
+        let patients: any[] = []
+        for (let patient of this.urgencia) {
+            if (patient.smoker)
+                patients.push(patient.name)
+        }
+        return patients
     }
 }
 
