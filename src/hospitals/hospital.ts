@@ -16,8 +16,6 @@ interface IHopsital {
     consults: consult[];
     addPatientToQueue(patient: hospitalPatient, patientDbInstance: any): void;
     attendPatients(): void;
-    freeConsults(): void;
-    topConsults(): any;
     findOlder(): any;
     smokerUgency(): any;
     greaterRisk(historyNumber:any):any;
@@ -112,28 +110,6 @@ class Hospital implements IHopsital {
                 status: 'pending'
             }
         })
-    }
-
-    async freeConsults() {
-        const consultationsAvailable:any[] = await sequelize.models.Consultation.findAll({
-            where: {
-                state: 'close'
-            }
-        })
-
-        for(let consultant of consultationsAvailable) {
-            consultant.state = 'open'
-            await consultant.save()
-        }
-    }
-
-    async topConsults(): Promise<any> {
-        const topAttendedConsultant:any = await sequelize.models.Consultation.findOne({
-            order: [
-                ['totalAttended', 'DESC']
-            ]
-        })
-        return topAttendedConsultant
     }
 
     async findOlder(): Promise<any> {

@@ -78,15 +78,6 @@ router.get('/attend', async (req, res) => {
     res.send({ msg: 'attend' })
 })
 
-router.get('/free', async (req, res) => {
-    myHospital.freeConsults()
-    res.send({ msg: 'all free' })
-})
-
-router.get('/top', async (req, res) => {
-    res.send({ top: await myHospital.topConsults() })
-})
-
 router.get('/older', async (req, res) => {
     res.send({ top: await myHospital.findOlder() })
 })
