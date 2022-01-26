@@ -53,4 +53,4 @@ El servidor tiene la capacidad de generar de manera aleatoria pacientes, obtenie
 
 
 #### diagrama de flujo
-![alt text](https://github.com/carlosnat/fonasaCencoTestServer/miscellaneous/master/generatePatient.jpeg?raw=true)
+![alt text](https://github.com/carlosnat/fonasaCencoTestServer/blob/master/miscellaneous/generatePatient.jpeg?raw=true)
