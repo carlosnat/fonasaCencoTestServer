@@ -1,7 +1,7 @@
 import { Router } from "express";
 import PatientsController from './patientsCtrl'
 import myHospital from "../hospitals/hospital";
-import { sequelize } from "../database/connection";
+import { createPatientRecordInHospital, findWaitingPatients } from "../hospitals/hospitalPatientModel";
 
 const router = Router()
 
@@ -42,61 +42,33 @@ const calculateRisk = ({ patientData }: any, priority: number) => {
 
 router.get('/generate', async (req, res) => {
     try {
-        const patient = new PatientsController()
-        const generated = await patient.generate()
-        generated.calculateExtraProp()
-        // registro en tabla pacientes del hospital
-        const hospitalPatientDbInstance: any = sequelize.models.HospitalPatient.build({
-            PatientId: generated.patientDbInstace.id,
-            status: 'pending',
-            HospitalId: req.query.hospitalId,
-        })
-        // el hospital atiende al paciente para asignarle la prioridad y el riesgo
-        const priority = assignPriority(generated)
-        hospitalPatientDbInstance.priority = priority
-        const risk = calculateRisk(generated, priority)
-        hospitalPatientDbInstance.risk = risk
-        await hospitalPatientDbInstance.save()
-
-        myHospital.addPatientToQueue({ ...generated.patientData, ...generated.getExtraProp(), priority, risk }, hospitalPatientDbInstance)
-
-        const patientsWaiting = await sequelize.models.HospitalPatient.findAll({ where: { status: 'waiting' } })
-        if (!patientsWaiting.length) {
-            hospitalPatientDbInstance.status = 'waiting'
-            await hospitalPatientDbInstance.save()
-            myHospital.attendPatients()
+        const { hospitalId } = req.query
+        if(hospitalId) {
+            const patient = new PatientsController()
+            const generated = await patient.generate()
+            generated.calculateExtraProp()
+            // registro en tabla pacientes del hospital
+            const patientRecord: any = await createPatientRecordInHospital(generated.patientDbInstace.id, hospitalId)
+            // el hospital atiende al paciente para asignarle la prioridad y el riesgo
+            const priority = assignPriority(generated)
+            patientRecord.priority = priority
+            const risk = calculateRisk(generated, priority)
+            patientRecord.risk = risk
+            await patientRecord.save()
+    
+            myHospital.asignPatientToConsultation({ ...generated.patientData, ...generated.getExtraProp(), priority, risk }, patientRecord)
+    
+            const patientsWaiting = await findWaitingPatients()
+            if (!patientsWaiting.length) {
+                patientRecord.status = 'waiting'
+                await patientRecord.save()
+                myHospital.attendPatients()
+            }
+    
+            res.send({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
         }
-
-        res.send({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
     } catch (error) {
         res.status(500).send({ error: JSON.stringify(error) })
-    }
-})
-
-router.get('/attend', async (req, res) => {
-    myHospital.attendPatients()
-    res.send({ msg: 'attend' })
-})
-
-router.get('/older', async (req, res) => {
-    res.send({ top: await myHospital.findOlder() })
-})
-
-router.get('/top-smoker', async (req, res) => {
-    try {
-        res.send(await myHospital.smokerUgency())
-    } catch (error) {
-        res.send(error)
-    }
-})
-
-router.get('/greater-risk', async (req, res) => {
-    try {
-        const { patientHistoryNumber } = req.query
-        console.log('patientHistoryNumber', patientHistoryNumber)
-        res.send(await myHospital.greaterRisk(patientHistoryNumber))
-    } catch (error) {
-        res.send(error)
     }
 })
 

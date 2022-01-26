@@ -6,33 +6,15 @@ import {
     findPatientInHospitalById,
     findPatientsWithRiskGreaterThan,
     findSmokerWithUrgency,
-    pendingPatientToWaiting
+    updatePendingPatientToWaiting
 } from "./hospitalPatientModel";
-
-type hospitalPatient = {
-    name: string;
-    age: number;
-    historyId: number;
-    gender: string;
-    type: string;
-    hasDiet: boolean;
-    priority: number;
-    risk: number;
-    smoker: boolean;
-}
-
-interface IHopsital {
-    addPatientToQueue(patient: hospitalPatient, patientDbInstance: any): void;
-    attendPatients(): void;
-    findOlder(): any;
-    smokerUrgency(): any;
-    greaterRisk(historyNumber: any): any;
-}
+import { IHopsital } from "./interfaces";
+import { hospitalPatient } from "./types";
 
 class Hospital implements IHopsital {
     constructor() { }
 
-    async addPatientToQueue(patient: hospitalPatient, patientDbInstance: any) {
+    async asignPatientToConsultation(patient: hospitalPatient, patientDbInstance: any) {
         if (patient.type === 'child' && patient.priority <= 4) {
             patientDbInstance.consultType = 'pediatry'
         }
@@ -60,7 +42,7 @@ class Hospital implements IHopsital {
                 await consultant.save()
             }
         }
-        pendingPatientToWaiting()
+        updatePendingPatientToWaiting()
     }
 
     async findOlder(): Promise<any> {

@@ -1,11 +1,27 @@
 import { Op, sequelize } from "../database/connection"
 
+// create
+export const createPatientRecordInHospital = async(patientId: number, hospitalId: any) => {
+    const hospitalPatientDbInstance: any = sequelize.models.HospitalPatient.build({
+        PatientId: patientId,
+        status: 'pending',
+        HospitalId: hospitalId,
+    })
+    return hospitalPatientDbInstance
+}
+
+// find
 export const findPatientInHospitalById = async(patientId: number) => {
     return await sequelize.models.HospitalPatient.findOne({
         where: {
             PatientId: patientId
         }
     })
+}
+
+export const findWaitingPatients = async() => {
+    const patientsWaiting = await sequelize.models.HospitalPatient.findAll({ where: { status: 'waiting' } })
+    return patientsWaiting
 }
 
 export const findNextPatientWaiting = async(hospitalId: number, consultationType: string) => {
@@ -23,15 +39,6 @@ export const findNextPatientWaiting = async(hospitalId: number, consultationType
         include: sequelize.models.Patient
     })
     return patientToAttend
-}
-
-export const pendingPatientToWaiting = async() => {
-    const patientsUpdated = await sequelize.models.HospitalPatient.update({ status: 'waiting'}, {
-        where: {
-            status: 'pending'
-        }
-    })
-    return patientsUpdated
 }
 
 export const findOlderPatientWaiting = async() => {
@@ -102,4 +109,14 @@ export const findPatientsWithRiskGreaterThan = async(riskLimit: number) => {
         ]
     })
     return patientsWithGreaterRiskLimit
+}
+
+//update
+export const updatePendingPatientToWaiting = async() => {
+    const patientsUpdated = await sequelize.models.HospitalPatient.update({ status: 'waiting'}, {
+        where: {
+            status: 'pending'
+        }
+    })
+    return patientsUpdated
 }
