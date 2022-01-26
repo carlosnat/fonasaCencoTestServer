@@ -205,13 +205,14 @@ class Hospital implements IHopsital {
 
         const patientsWithGreaterRisk:any = await sequelize.models.HospitalPatient.findAll({
             where: {
+                status: 'waiting',
                 risk: {
                     [Op.gt]: patientRecord.risk
                 }
             },
             order: [
                 ['risk', 'DESC'],
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ]
         })
         return patientsWithGreaterRisk
