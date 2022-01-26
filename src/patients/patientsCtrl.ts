@@ -32,7 +32,7 @@ class PatientController {
     async generate(): Promise<any> {
         const randomData = await this.fetchRandomUser()
         const newPatientData = this.buildPatientData(randomData)
-        this.patientDb = sequelize.models.Patient.build(newPatientData)
+        this.patientDb = sequelize.models.Patient.build(newPatientData) // registro en tabla pacientes
         await this.patientDb.save()
         return this.buildPatient(newPatientData);
     }

@@ -13,9 +13,6 @@ type hospitalPatient = {
 }
 
 interface IHopsital {
-    pediatria: hospitalPatient[];
-    urgencia: hospitalPatient[];
-    consultaGeneral: hospitalPatient[];
     consults: consult[];
     addPatientToQueue(patient: hospitalPatient, patientDbInstance: any): void;
     attendPatients(): void;
@@ -35,9 +32,6 @@ type consult = {
 }
 
 class Hospital implements IHopsital {
-    pediatria: hospitalPatient[] = []
-    urgencia: hospitalPatient[] = []
-    consultaGeneral: hospitalPatient[] = []
     consults: consult[] = [];
     constructor() {
         this.configConsults()
@@ -69,22 +63,20 @@ class Hospital implements IHopsital {
 
     async addPatientToQueue(patient: hospitalPatient, patientDbInstance:any) {
         if (patient.type === 'child' && patient.priority <= 4) {
-            this.pediatria.push(patient)
             patientDbInstance.consultType = 'pediatry'
         }
         else if (patient.priority <= 4) {
-            this.consultaGeneral.push(patient)
             patientDbInstance.consultType = 'general'
         }
         else {
-            this.urgencia.push(patient)
             patientDbInstance.consultType = 'urgency'
         }
-        patientDbInstance.status = 'waiting'
+        // patientDbInstance.status = 'waiting'
         await patientDbInstance.save()
     }
 
     async attendPatients() {
+        // query open consultants
         const consultationsAvailable:any[] = await sequelize.models.Consultation.findAll({
             where: {
                 state: 'open'
@@ -100,10 +92,12 @@ class Hospital implements IHopsital {
                 },
                 order: [
                     ['priority', 'DESC'],
-                    ['risk', 'DESC']
+                    ['risk', 'DESC'],
+                    ['createdAt', 'ASC']
                 ],
                 include: sequelize.models.Patient
             })
+
             if(patientToAttend) {
                 patientToAttend.status = 'attended'
                 await patientToAttend.save()
@@ -112,6 +106,12 @@ class Hospital implements IHopsital {
                 await consultant.save()
             }
         }
+
+        await sequelize.models.HospitalPatient.update({ status: 'waiting'}, {
+            where: {
+                status: 'pending'
+            }
+        })
     }
 
     async freeConsults() {

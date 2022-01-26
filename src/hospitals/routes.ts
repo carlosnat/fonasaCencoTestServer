@@ -4,13 +4,13 @@ import myHospital from "../hospitals/hospital";
 
 const router = Router()
 
-router.get('/report', async (req, res) => {
-    res.send({
-        pediatria: myHospital.pediatria.length,
-        general: myHospital.consultaGeneral.length,
-        urgencia: myHospital.urgencia.length
-    })
-})
+// router.get('/report', async (req, res) => {
+//     res.send({
+//         pediatria: myHospital.pediatria.length,
+//         general: myHospital.consultaGeneral.length,
+//         urgencia: myHospital.urgencia.length
+//     })
+// })
 
 router.post('/consultation', async (req, res) => {
     try {

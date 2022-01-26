@@ -44,21 +44,29 @@ router.get('/generate', async (req, res) => {
     try {
         const patient = new PatientsController()
         const generated = await patient.generate()
-        //
         generated.calculateExtraProp()
-        const hospitalPatientDbInstance:any = sequelize.models.HospitalPatient.build({
+        // registro en tabla pacientes del hospital
+        const hospitalPatientDbInstance: any = sequelize.models.HospitalPatient.build({
             PatientId: generated.patientDbInstace.id,
             status: 'pending',
             HospitalId: req.query.hospitalId,
         })
-
-        await hospitalPatientDbInstance.save()
+        // el hospital atiende al paciente para asignarle la prioridad y el riesgo
         const priority = assignPriority(generated)
         hospitalPatientDbInstance.priority = priority
         const risk = calculateRisk(generated, priority)
         hospitalPatientDbInstance.risk = risk
         await hospitalPatientDbInstance.save()
+
         myHospital.addPatientToQueue({ ...generated.patientData, ...generated.getExtraProp(), priority, risk }, hospitalPatientDbInstance)
+
+        const patientsWaiting = await sequelize.models.HospitalPatient.findAll({ where: { status: 'waiting' } })
+        if (!patientsWaiting.length) {
+            hospitalPatientDbInstance.status = 'waiting'
+            await hospitalPatientDbInstance.save()
+            myHospital.attendPatients()
+        }
+
         res.send({ ...generated.patientData, ...generated.getExtraProp(), priority, risk })
     } catch (error) {
         res.status(500).send({ error: JSON.stringify(error) })
@@ -67,7 +75,7 @@ router.get('/generate', async (req, res) => {
 
 router.get('/attend', async (req, res) => {
     myHospital.attendPatients()
-    res.send({ msg: 'attend', consults: myHospital.consults })
+    res.send({ msg: 'attend' })
 })
 
 router.get('/free', async (req, res) => {
