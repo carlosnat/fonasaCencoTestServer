@@ -1,7 +1,7 @@
 import { hospitalPatient } from "../types";
 
 export interface IHopsital {
-    asignPatientToConsultation(patient: hospitalPatient, patientDbInstance: any): void;
+    asignPatientToConsultation(patientGroup: string, patientPriority: number , patientDbInstance: any): void;
     attendPatients(): void;
     findOlder(): any;
     smokerUrgency(): any;

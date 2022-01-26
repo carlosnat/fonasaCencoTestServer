@@ -37,3 +37,9 @@ export type apiUserResponse = {
         version: string
     }
 }
+
+export const patientsType = {
+    CHILD: 'child',
+    YOUNG: 'young',
+    ELDER: 'elder'
+}

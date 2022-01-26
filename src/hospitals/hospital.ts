@@ -14,17 +14,17 @@ import { hospitalPatient } from "./types";
 class Hospital implements IHopsital {
     constructor() { }
 
-    async asignPatientToConsultation(patient: hospitalPatient, patientDbInstance: any) {
-        if (patient.type === 'child' && patient.priority <= 4) {
+    async asignPatientToConsultation(patientGroup: string, patientPriority: number, patientDbInstance: any) {
+        console.log('super grupo', patientGroup, patientPriority)
+        if (patientGroup === 'child' && patientPriority <= 4) {
             patientDbInstance.consultType = 'pediatry'
         }
-        else if (patient.priority <= 4) {
+        else if (patientPriority <= 4) {
             patientDbInstance.consultType = 'general'
         }
         else {
             patientDbInstance.consultType = 'urgency'
         }
-        // patientDbInstance.status = 'waiting'
         await patientDbInstance.save()
     }
 

@@ -2,11 +2,12 @@ import { Op, sequelize } from "../database/connection"
 
 // create
 export const createPatientRecordInHospital = async(patientId: number, hospitalId: any) => {
-    const hospitalPatientDbInstance: any = sequelize.models.HospitalPatient.build({
+    const hospitalPatientDbInstance: any = await sequelize.models.HospitalPatient.build({
         PatientId: patientId,
         status: 'pending',
         HospitalId: hospitalId,
     })
+    await hospitalPatientDbInstance.save()
     return hospitalPatientDbInstance
 }
 
