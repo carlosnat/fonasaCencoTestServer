@@ -44,7 +44,7 @@ Utilizar endpoint consultant -> create
 ## Funcionalidades
 ### Generar paciente
 El servidor tiene la capacidad de generar de manera aleatoria pacientes, obteniendo datos de la API: https://randomuser.me/ para ello debemos consumir el endpoint patient -> generate
-|Nombre          |Endpoint              |Method |Qeury Param | Respuesta esquema                  
+|Nombre          |Endpoint              |Method |Query Param | Respuesta esquema                  
 |----------------|----------------------|-------|------------|-|
 |patientGenerate  | `/patient/generate` |`GET`  | `hospitalId`  | <pre>{<br> "patient": {} <br> "hospitalRecord": {} <br>}</pre>
 > Se requiere el hospitalId para asignar el paciente generado a un hospital
