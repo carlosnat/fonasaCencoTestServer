@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize';
+import { serverConfig } from '../../config/config';
 import { definechildPatientModel } from './schema/childPatient';
 import { defineConsultationModel } from './schema/consultation';
 import { defineElderPatient } from './schema/elderPatient';
@@ -7,9 +8,11 @@ import { defineHospitalPatientModel } from './schema/hospitalPatient';
 import { definePatientlModel } from './schema/patient';
 import { defineyoungPatientModel } from './schema/youngPatient';
 
+const config = serverConfig()
+const { DATABASE: { NAME, USER, PASS, HOST} } = config
 
-export const sequelize = new Sequelize('fonasa', 'postgres', 'pass1234', {
-    host: 'localhost',
+export const sequelize = new Sequelize(NAME, USER, PASS, {
+    host: HOST,
     dialect: 'postgres'
 });
 

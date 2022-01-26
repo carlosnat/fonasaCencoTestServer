@@ -1,4 +1,5 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
@@ -9,7 +10,6 @@ import consultationRouter from './src/consultants/route';
 import { connecToDataBase } from './src/database/connection';
 
 
-dotenv.config();
 const PORT = process.env.PORT || 3000;
 const app: Express = express();
 
