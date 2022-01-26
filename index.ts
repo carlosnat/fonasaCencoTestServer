@@ -22,7 +22,7 @@ app.use('/hospital', hospitalRouter)
 app.use('/consultation', consultationRouter)
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('<h1>Hello from the TypeScript world!</h1>');
+  res.send(`<h1>I'm Alive!</h1>`);
 });
 
 app.listen(PORT, () => {
