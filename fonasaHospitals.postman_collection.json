@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "ae60f021-310d-41ee-84e8-e5f9056f482f",
+		"name": "fonasaHospitals",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "consultant",
+			"item": [
+				{
+					"name": "freeSpots",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/consultation/freeSpots",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"consultation",
+								"freeSpots"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "topTotalAttended",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/consultation/topTotalAttended",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"consultation",
+								"topTotalAttended"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"specialistName\": \"willys gomez\",\n    \"type\": \"urgency\",\n    \"hospitalId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/consultation",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"consultation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getByHospitalId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/consultation?hospitalId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"consultation"
+							],
+							"query": [
+								{
+									"key": "hospitalId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "patient",
+			"item": [
+				{
+					"name": "generate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/patient/generate?hospitalId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"patient",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "hospitalId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "hospital",
+			"item": [
+				{
+					"name": "reportTotalWaiting",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/report",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reportOlderPatient",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/older",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"older"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reportTopSmoker",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/urgency-smoker",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"urgency-smoker"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"hospital paso al infierno\",\n    \"address\": \"south park colorado\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/hospital",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "greaterRiskThanPatient",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/greater-risk-than-patient?patientHistoryNumber=1643170133076",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"greater-risk-than-patient"
+							],
+							"query": [
+								{
+									"key": "patientHistoryNumber",
+									"value": "1643170133076"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attend",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/attend",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"attend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAllHospital",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findPatientsByStatusInTheHospital",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/hospital/patients?hospitalId=1&status=attended",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"hospital",
+								"patients"
+							],
+							"query": [
+								{
+									"key": "hospitalId",
+									"value": "1"
+								},
+								{
+									"key": "status",
+									"value": "attended"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
