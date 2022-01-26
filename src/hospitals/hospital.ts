@@ -1,4 +1,4 @@
-import { sequelize } from "../database/connection"
+import { sequelize, Op } from "../database/connection"
 
 type hospitalPatient = {
     name: string;
@@ -23,6 +23,7 @@ interface IHopsital {
     topConsults(): any;
     findOlder(): any;
     smokerUgency(): any;
+    greaterRisk(historyNumber:any):any;
 }
 
 type consult = {
@@ -187,6 +188,33 @@ class Hospital implements IHopsital {
             ]
         })
         return urgencySmoker
+    }
+
+    async greaterRisk(historyNumber: any) {
+        const patient:any = await sequelize.models.Patient.findOne({
+            where: {
+                historyNumber
+            }
+        })
+
+        const patientRecord:any = await sequelize.models.HospitalPatient.findOne({
+            where: {
+                PatientId: patient.id
+            }
+        })
+
+        const patientsWithGreaterRisk:any = await sequelize.models.HospitalPatient.findAll({
+            where: {
+                risk: {
+                    [Op.gt]: patientRecord.risk
+                }
+            },
+            order: [
+                ['risk', 'DESC'],
+                ['createdAt', 'DESC']
+            ]
+        })
+        return patientsWithGreaterRisk
     }
 }
 

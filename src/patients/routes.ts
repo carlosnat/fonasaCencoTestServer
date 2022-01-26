@@ -91,4 +91,14 @@ router.get('/top-smoker', async (req, res) => {
     }
 })
 
+router.get('/greater-risk', async (req, res) => {
+    try {
+        const { patientHistoryNumber } = req.query
+        console.log('patientHistoryNumber', patientHistoryNumber)
+        res.send(await myHospital.greaterRisk(patientHistoryNumber))
+    } catch (error) {
+        res.send(error)
+    }
+})
+
 export default router
