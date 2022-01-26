@@ -51,3 +51,28 @@ El servidor tiene la capacidad de generar de manera aleatoria pacientes, obtenie
 
 >la Respuesta retorna en la propiedad **patient** el paciente generado y guradado en la tabla "patient" y en la propiedad **hospitalRecord** los datos del paciente asigando al hospital con su prioridad y riesgo almacenados en la tabla hospitalPatient.
 
+
+## UML diagrams
+
+
+```mermaid
+sequenceDiagram
+patient/route.ts ->> patientsCtrl.ts: new PatientsController()
+patientsCtrl.ts ->> patient/route.ts: patientsCtrl instance
+patient/route.ts ->> patientsCtrl.ts: generate(hospitalId)
+patientsCtrl.ts ->> patientsCtrl.ts : fetchRandomPatientData()
+patientsCtrl.ts ->> patientsCtrl.ts : organizePatientData()
+patientsCtrl.ts ->> patientModel.ts : createPatient(newPatientData)
+patientModel.ts ->> patientsCtrl.ts : patientDbCreated
+patientsCtrl.ts ->> patientsCtrl.ts : buildPatient() 
+Note right of patientsCtrl.ts: Aqui se construye un objeto<br/>paciente correspondiente al grupo<br/>niño | joven | anciano <br/>.
+patientsCtrl.ts ->> patientsCtrl.ts : calculateExtraProp() 
+Note right of patientsCtrl.ts: Aqui se calcula dependiendo <br/> del grupo del paciente<br /> valores como si es fumador, tiene dieta<br/>.
+patientsCtrl.ts ->> hospitalPatientModel.ts : createPatientRecordInHospital() 
+hospitalPatientModel.ts ->> patientsCtrl.ts : instancia de tabla hospitalPatient 
+patientsCtrl.ts ->> patientsCtrl.ts : assignPatientPriority() 
+patientsCtrl.ts ->> patientsCtrl.ts : calculatePatientRisk()
+patientsCtrl.ts ->> hospital.ts: asignPatientToConsultation()
+Note right of patientsCtrl.ts: Según la prioridad y riesgo <br/> del paciente se asigna <br/> a la sala de <br/> urgencias, pediatria o general<br/>.
+patientsCtrl.ts ->> patientsCtrl.ts : validateNewPatientCanBeAttended()
+patientsCtrl.ts ->> patient/route.ts : paciente generado

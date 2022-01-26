@@ -30,15 +30,6 @@ class PatientController {
         return { patient: this.patientDb, hospitalRecord: this.patientHospitalRecord }
     }
 
-    async validateNewPatientCanBeAttended() {
-        const patientsWaiting = await findWaitingPatients()
-        if (!patientsWaiting.length) {
-            this.patientHospitalRecord.status = 'waiting'
-            await this.patientHospitalRecord.save()
-            await myHospital.attendPatients()
-        }
-    }
-
     async fetchRandomPatientData() {
         const { data } = await Axios.get('https://randomuser.me/api/?results=1&inc=gender,name,dob,id,picture');
         const [userData] = data.results;
@@ -108,6 +99,15 @@ class PatientController {
         riskCalculated = ((this.patientDb.age * this.patientHospitalRecord.priority) / 100).toFixed(1)
         this.patientHospitalRecord.risk = riskCalculated
         await this.patientHospitalRecord.save()
+    }
+
+    async validateNewPatientCanBeAttended() {
+        const patientsWaiting = await findWaitingPatients()
+        if (!patientsWaiting.length) {
+            this.patientHospitalRecord.status = 'waiting'
+            await this.patientHospitalRecord.save()
+            await myHospital.attendPatients()
+        }
     }
 }
 
