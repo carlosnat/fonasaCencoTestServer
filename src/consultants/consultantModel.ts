@@ -39,3 +39,12 @@ export const freeSpotConsultations = async () => {
 
     return consultationsAvailable
 }
+
+export const findOpenConsultations = async() => {
+    const consultationOpens = await sequelize.models.Consultation.findAll({
+        where: {
+            state: 'open'
+        }
+    })
+    return consultationOpens
+}
