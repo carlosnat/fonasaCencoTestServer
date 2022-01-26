@@ -41,4 +41,13 @@ Utilizar endpoint consultant -> create
 |----------------|-|-------------------------------|-----------------------------|
 |createConsultation  | `/consultation` |`POST`                         | <pre>{<br> "specialistName": "test", <br> "type": "urgency - general - pediatry" <br> "hospitalId": "id Hospital created"<br>}</pre>
 
+## Funcionalidades
+### Generar paciente
+El servidor tiene la capacidad de generar de manera aleatoria pacientes, obteniendo datos de la API: https://randomuser.me/ para ello debemos consumir el endpoint patient -> generate
+|Nombre          |Endpoint              |Method |Qeury Param | Respuesta esquema                  
+|----------------|----------------------|-------|------------|-|
+|patientGenerate  | `/patient/generate` |`GET`  | `hospitalId`  | <pre>{<br> "patient": {} <br> "hospitalRecord": {} <br>}</pre>
+> Se requiere el hospitalId para asignar el paciente generado a un hospital
+
+>la Respuesta retorna en la propiedad **patient** el paciente generado y guradado en la tabla "patient" y en la propiedad **hospitalRecord** los datos del paciente asigando al hospital con su prioridad y riesgo almacenados en la tabla hospitalPatient.
 
