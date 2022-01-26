@@ -84,7 +84,11 @@ router.get('/older', async (req, res) => {
 })
 
 router.get('/top-smoker', async (req, res) => {
-    res.send({ top: myHospital.smokerUgency() })
+    try {
+        res.send(await myHospital.smokerUgency())
+    } catch (error) {
+        res.send(error)
+    }
 })
 
 export default router

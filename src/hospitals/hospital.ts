@@ -22,7 +22,7 @@ interface IHopsital {
     freeConsults(): void;
     topConsults(): any;
     findOlder(): any;
-    smokerUgency(): string[];
+    smokerUgency(): any;
 }
 
 type consult = {
@@ -157,13 +157,36 @@ class Hospital implements IHopsital {
         return olderWaiting
     }
 
-    smokerUgency(): string[] {
-        let patients: any[] = []
-        for (let patient of this.urgencia) {
-            if (patient.smoker)
-                patients.push(patient.name)
-        }
-        return patients
+    async smokerUgency(): Promise<any[]> {
+        const urgencySmoker:any = await sequelize.models.HospitalPatient.findAll({
+            attributes: ['priority', 'risk'],
+            where: {
+                status: 'waiting',
+                consultType: 'urgency'
+            }, 
+            include: [
+                {
+                    model: sequelize.models.Patient,
+                    attributes: ['name', 'age'],
+                    where: {
+                        group: 'young',
+
+                    },
+                    include: [
+                        {
+                            model: sequelize.models.youngPatient,
+                            where: {
+                                smoker: true
+                            },
+                        }
+                    ]
+                }
+            ],
+            order: [
+                ['priority', 'DESC']
+            ]
+        })
+        return urgencySmoker
     }
 }
 
