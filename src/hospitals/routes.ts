@@ -31,7 +31,6 @@ router.get('/urgency-smoker', async (req, res) => {
 router.get('/greater-risk-than-patient', async (req, res) => {
     try {
         const { patientHistoryNumber } = req.query
-        console.log('patientHistoryNumber', patientHistoryNumber)
         res.send(await myHospital.greaterRisk(patientHistoryNumber))
     } catch (error) {
         res.send(error)

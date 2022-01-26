@@ -15,7 +15,6 @@ class Hospital implements IHopsital {
     constructor() { }
 
     async asignPatientToConsultation(patientGroup: string, patientPriority: number, patientDbInstance: any) {
-        console.log('super grupo', patientGroup, patientPriority)
         if (patientGroup === 'child' && patientPriority <= 4) {
             patientDbInstance.consultType = 'pediatry'
         }

@@ -9,7 +9,6 @@ import {
 const router = Router()
 
 router.get('/', async(req, res) => {
-    console.log('req.query.hospitalId', req.query.hospitalId)
     const consultants = await findConsultantsByHospitalId(req.query.hospitalId)
     res.send(consultants)
 })

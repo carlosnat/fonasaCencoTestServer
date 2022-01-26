@@ -19,7 +19,6 @@ class PatientController {
     async generate(hospitalId: any): Promise<any> {
         const randomData = await this.fetchRandomPatientData()
         const newPatientData = this.organizePatientData(randomData)
-        console.log('newPatientData', newPatientData)
         this.patientDb = await createPatient(newPatientData)
         this.patientTypeInstance = await this.buildPatient(newPatientData);
         await this.patientTypeInstance.calculateExtraProp()
