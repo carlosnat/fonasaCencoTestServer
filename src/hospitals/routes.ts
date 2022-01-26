@@ -1,6 +1,7 @@
 import { Router } from "express";
 import myHospital from "./hospital";
-import { createHospital } from "./hospitalModel";
+import { createHospital, findAllHospitals } from "./hospitalModel";
+import { findPatientsByStatus } from "./hospitalPatientModel";
 
 const router = Router()
 
@@ -8,6 +9,11 @@ router.post('/', async (req, res) => {
     const { name, address } = req.body
     const newHospital = await createHospital({ name, address })
     res.send(newHospital)
+})
+
+router.get('/', async(req, res) => {
+    const hospitals = await findAllHospitals()
+    res.send(hospitals)
 })
 
 router.get('/older', async (req, res) => {
@@ -35,6 +41,12 @@ router.get('/greater-risk-than-patient', async (req, res) => {
 router.get('/attend', async (req, res) => {
     myHospital.attendPatients()
     res.send({ msg: 'attend' })
+})
+
+router.get('/patients', async(req, res) => {
+    const { hospitalId, status } = req.query
+    const patients = await findPatientsByStatus(hospitalId, status)
+    res.send(patients)
 })
 
 export default router

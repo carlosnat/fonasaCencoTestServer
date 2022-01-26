@@ -48,3 +48,12 @@ export const findOpenConsultations = async() => {
     })
     return consultationOpens
 }
+
+export const findConsultantsByHospitalId = async(HospitalId: any) => {
+    const hopsitalsConsultants = await sequelize.models.Consultation.findAll({
+        where: {
+            HospitalId: HospitalId
+        }
+    })
+    return hopsitalsConsultants
+}

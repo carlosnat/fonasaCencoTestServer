@@ -1,8 +1,18 @@
 import { Router } from "express";
-import myHospital from "../hospitals/hospital";
-import { CreateConsultation, findTopConsultation, freeSpotConsultations } from "./consultantModel";
+import { 
+    CreateConsultation, 
+    findConsultantsByHospitalId, 
+    findTopConsultation, 
+    freeSpotConsultations 
+} from "./consultantModel";
 
 const router = Router()
+
+router.get('/', async(req, res) => {
+    console.log('req.query.hospitalId', req.query.hospitalId)
+    const consultants = await findConsultantsByHospitalId(req.query.hospitalId)
+    res.send(consultants)
+})
 
 router.get('/freeSpots', async (req, res) => {
     res.send({ msg: 'action success', result: await freeSpotConsultations() })

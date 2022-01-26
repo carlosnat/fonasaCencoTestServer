@@ -20,6 +20,16 @@ export const findPatientInHospitalById = async(patientId: number) => {
     })
 }
 
+export const findPatientsByStatus = async(HospitalId: any, status: any) => {
+    return await sequelize.models.HospitalPatient.findAll({
+        where: {
+            HospitalId: HospitalId,
+            status: status
+        },
+        include: sequelize.models.Patient
+    })
+}
+
 export const findWaitingPatients = async() => {
     const patientsWaiting = await sequelize.models.HospitalPatient.findAll({ where: { status: 'waiting' } })
     return patientsWaiting
