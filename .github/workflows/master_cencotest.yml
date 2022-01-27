@@ -52,6 +52,9 @@ jobs:
 
       - name: install typescript
         run: npm install -g typescript@3.6.4
+      
+      - name: update dependecies
+        run: npm install
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
