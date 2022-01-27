@@ -50,10 +50,12 @@ jobs:
       - name: unzip artifact for deployment
         run: unzip release.zip
 
+      - name: install typescript
+        run: npm install -g typescript@3.6.4
+
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
-        run: npm install -g typescript@3.6.4
         with:
           app-name: 'cencotest'
           slot-name: 'Production'
