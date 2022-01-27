@@ -25,15 +25,11 @@ jobs:
         run: |
           npm install
 
-      # Zip artifacts to speed things up
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -qr
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: release.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,4 +51,4 @@ jobs:
           app-name: 'cencotest'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_812E73C118DD44828DF533BD5DAB69C1 }}
-          package: release.zip
+          package: .
