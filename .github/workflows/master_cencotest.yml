@@ -55,4 +55,4 @@ jobs:
           app-name: 'cencotest'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_812E73C118DD44828DF533BD5DAB69C1 }}
-          package: .
+          package: release.zip
