@@ -27,5 +27,5 @@ app.get('/', (req: Request, res: Response) => {
 
 app.listen(PORT, () => {
   console.log(`Running on ${PORT} ⚡`)
-  connecToDataBase()
+  // connecToDataBase()
 });
